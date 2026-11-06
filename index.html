@@ -133,20 +133,56 @@ window.buyUp = function(type){
 };
 
 function drawPv(){
-  const cvs=$('pv');if(!cvs)return;
-  const x=cvs.getContext('2d'),ac=['#19f3ff','#ff2bd6','#ffd23f','#7dff6b','#b06bff'][ch.c];
-  x.clearRect(0,0,320,170);x.fillStyle='#120a22';x.fillRect(0,0,320,170);
-  const cx=90,by=165;
+  const cvs = $('pv'); if(!cvs) return;
+  const x = cvs.getContext('2d');
+  const ac = ['#19f3ff','#ff2bd6','#ffd23f','#7dff6b','#b06bff'][ch.c];
   
-  // Render Flow Asset Sprite if loaded, else fallback to proportioned procedural geometry
-  const outfitImg=outfitImgs[ch.o];
-  if(outfitImg && outfitImg.complete && outfitImg.naturalWidth!==0){
-    x.drawImage(outfitImg, cx-35, by-130, 70, 110);
+  x.clearRect(0,0,320,170);
+  x.fillStyle = '#120a22';
+  x.fillRect(0,0,320,170);
+  const cx = 90, by = 165;
+
+  // If the mega sprite sheet is loaded, crop and draw from it!
+  if(sheetLoaded && megaSheet.naturalWidth !== 0){
+    const col = ch.o % 4;
+    const row = Math.floor(ch.o / 4);
+    x.drawImage(
+      megaSheet, 
+      col * SPRITE_SIZE, row * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE, 
+      cx - 35, by - 130, 70, 110
+    );
   } else {
-    x.fillStyle='#222';x.fillRect(cx-18,by-40,14,40);x.fillRect(cx+4,by-40,14,40);
-    x.fillStyle=['#1a1a3a','#d4a017','#4a4f66','#ff7ac8','#e8e04a'][ch.o];
-    x.fillRect(cx-26,by-115,52,78);
+    // Fallback wireframe geometry if sheet is missing locally
+    x.fillStyle = '#222';
+    x.fillRect(cx - 18, by - 40, 14, 40);
+    x.fillRect(cx + 4, by - 40, 14, 40);
+    x.fillStyle = ['#1a1a3a','#d4a017','#4a4f66','#ff7ac8','#e8e04a'][ch.o];
+    x.fillRect(cx - 26, by - 115, 52, 78);
   }
+
+  // Head and Face proportions fallback
+  const hy = by - 125;
+  x.fillStyle = '#f1c9a5';
+  x.beginPath(); x.arc(cx, hy, 18, 0, TAU); x.fill();
+  
+  // Ship preview rendering on the right
+  const w = [.5, 1, .8, .7][ch.s];
+  x.save();
+  x.translate(235, 80);
+  x.rotate(-Math.PI/2);
+  x.scale(2.6, 2.6);
+  x.beginPath();
+  x.moveTo(14,0); x.lineTo(-10,12.6*w); x.lineTo(-5,0); x.lineTo(-10,-12.6*w);
+  x.closePath();
+  x.fillStyle = '#0b0b1e'; x.fill();
+  x.strokeStyle = ac; x.lineWidth = 1.5; x.stroke();
+  x.restore();
+
+  x.fillStyle = '#e8f7ff';
+  x.font = '600 13px Rajdhani,sans-serif';
+  x.textAlign = 'center';
+  x.fillText(SHP[ch.s].n + ': ' + SHP[ch.s].d, 235, 150);
+}
 
   // Head and Face proportions
   const hy=by-125;
