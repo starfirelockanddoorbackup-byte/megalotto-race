@@ -28,18 +28,12 @@ canvas#pv{max-width:100%;border:1px solid var(--mg);margin:8px auto;display:bloc
 <script>
 // --- ASSET PRELOADER ARRAYS FOR GOOGLE FLOW SPRITE SHEETS ---
 // Drop your generated assets into an 'assets/' folder corresponding to these names:
-const RACES=['Human','Rephaim','Cyborg','Synth'];
-const GENDERS=['Male','Female','Androgynous'];
-const FACES=['Angular','Rugged','Scarred','Augmented','Serene'];
-const BODIES=['Athletic','Lean','Heavy-Plated','Stout'];
-const OUT=['Neon Trenchcoat','Gold Tracksuit','Debt Collector Suit','Mascot Costume','Hazmat Rig'];
-const ACCESSORIES=['HUD Visor','Tactical Rig','Cyber-Deck','Respirator','None'];
-const COLN=['Cyan','Magenta','Amber','Lime','Violet'];
-const SHP=[
-  {n:'Needle',sp:1.3,hp:60,d:'fast, fragile'},
-  {n:'Brick',sp:.85,hp:160,d:'slow, armored'},
-  {n:'Mule',sp:1.0,hp:100,d:'balanced cargo'},
-  {n:'Disco',sp:1.15,hp:80,d:'agile plasma'}
+  // Load the single mega sprite sheet image
+const megaSheet = new Image();
+megaSheet.src = 'assets/megasheet.png';
+let sheetLoaded = false;
+megaSheet.onload = () => { sheetLoaded = true; };
+const SPRITE_SIZE = 128; // Size of each grid block on your megasheet
 ];
 const QUO=['Rent is due.','Tell my landlord I tried.','Sponsored by gravity.','Net worth, here I come.'];
 const CAUSE=['a sponsored asteroid','an unlicensed use of the word victory','friendly fire from the corporate blockade','a clerical error, followed by a missile','enthusiastically flying into debris'];
